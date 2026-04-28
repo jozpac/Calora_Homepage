@@ -1,0 +1,162 @@
+<!doctype html>
+<html lang="sk">
+<head>
+<meta charset="utf-8" />
+<title>Calora — Redesign</title>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Schibsted+Grotesk:wght@400;500;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  html, body { margin: 0; padding: 0; background: #f0eee9; font-family: 'Schibsted Grotesk', 'Plus Jakarta Sans', system-ui, sans-serif; color: #0F2537; }
+  * { box-sizing: border-box; }
+</style>
+</head>
+<body>
+<div id="root"></div>
+<script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+<script type="text/babel" src="ios-frame.jsx"></script>
+<script type="text/babel" src="design-canvas.jsx"></script>
+<script type="text/babel" src="screens.jsx"></script>
+<script type="text/babel" src="screens2.jsx"></script>
+<script type="text/babel" src="screens3.jsx"></script>
+<script type="text/babel" src="screens-filled.jsx"></script>
+<script type="text/babel" src="screens-progres.jsx"></script>
+<script type="text/babel" src="screens-coach.jsx"></script>
+<script type="text/babel" src="screens-search.jsx"></script>
+<script type="text/babel" src="screens-auth.jsx"></script>
+<script type="text/babel" src="screens-recipes.jsx"></script>
+<script type="text/babel" src="screens-recipe-detail.jsx"></script>
+<script type="text/babel" src="screens-scan-result.jsx"></script>
+<script type="text/babel">
+function Phone({ children, nav = true, navVariant = 'home' }) {
+  const PH = 874 - 62; // minus status bar
+  const NavComp = navVariant === 'progres' ? FloatingNavProgres : navVariant === 'coach' ? FloatingNavCoach : navVariant === 'recipes' ? FloatingNavRecipes : FloatingNav;
+  return (
+    <IOSDevice width={402} height={874}>
+      <IOSStatusBar />
+      <div style={{ height: PH, overflow: 'hidden', display: 'flex', flexDirection: 'column', position: 'relative' }}>
+        <div style={{ flex: 1, minHeight: 0, overflowY: 'auto' }}>
+          {children}
+        </div>
+        {nav ? <div style={{ position: 'absolute', left: 0, right: 0, bottom: 0, pointerEvents: 'none' }}>
+          <div style={{ pointerEvents: 'auto' }}><NavComp /></div>
+        </div> : null}
+      </div>
+    </IOSDevice>
+  );
+}
+
+function App() {
+  return (
+    <DesignCanvas>
+      <DCSection id="page1" title="Prehľad · strana 1" subtitle="Dnešné kalórie a makrá — rovnaká štruktúra, teplejšia paleta">
+        <DCArtboard id="warm" label="A · Teplá neutrálna" width={402} height={874}>
+          <Phone><HomeWarm /></Phone>
+        </DCArtboard>
+        <DCArtboard id="ink" label="B · Atramentové hero" width={402} height={874}>
+          <Phone><HomeInk /></Phone>
+        </DCArtboard>
+        <DCArtboard id="editorial" label="C · Editorial" width={402} height={874}>
+          <Phone><HomeEditorial /></Phone>
+        </DCArtboard>
+      </DCSection>
+      <DCSection id="page2" title="Prehľad · strana 2" subtitle="Mikroživiny, kvalita stravy a tip od Tomáša — druhý swipe karuselu">
+        <DCArtboard id="warm2" label="A · Teplá neutrálna" width={402} height={874}>
+          <Phone><HomeWarm2 /></Phone>
+        </DCArtboard>
+        <DCArtboard id="ink2" label="B · Atramentové" width={402} height={874}>
+          <Phone><HomeInk2 /></Phone>
+        </DCArtboard>
+        <DCArtboard id="editorial2" label="C · Editorial" width={402} height={874}>
+          <Phone><HomeEditorial2 /></Phone>
+        </DCArtboard>
+      </DCSection>
+      <DCSection id="page3" title="Prehľad · strana 3" subtitle="Voda, kroky a tip od Tomáša — tretí swipe karuselu">
+        <DCArtboard id="warm3" label="A · Teplá neutrálna" width={402} height={874}>
+          <Phone><HomeWarm3 /></Phone>
+        </DCArtboard>
+        <DCArtboard id="ink3" label="B · Atramentové" width={402} height={874}>
+          <Phone><HomeInk3 /></Phone>
+        </DCArtboard>
+        <DCArtboard id="editorial3" label="C · Editorial" width={402} height={874}>
+          <Phone><HomeEditorial3 /></Phone>
+        </DCArtboard>
+      </DCSection>
+      <DCSection id="filled" title="Prehľad · s dátami" subtitle="Ako vyzerá obrazovka, keď si už pridal jedlo — naplnený stav">
+        <DCArtboard id="warmFilled" label="A · Teplá neutrálna" width={402} height={874}>
+          <Phone><HomeWarmFilled /></Phone>
+        </DCArtboard>
+        <DCArtboard id="inkFilled" label="B · Atramentové" width={402} height={874}>
+          <Phone><HomeInkFilled /></Phone>
+        </DCArtboard>
+        <DCArtboard id="editorialFilled" label="C · Editorial" width={402} height={874}>
+          <Phone><HomeEditorialFilled /></Phone>
+        </DCArtboard>
+      </DCSection>
+      <DCSection id="progres" title="Progres" subtitle="Váha, BMI a vývoj — samostatná záložka">
+        <DCArtboard id="progresWarm" label="A · Teplá neutrálna" width={402} height={874}>
+          <Phone navVariant="progres"><ProgresWarm /></Phone>
+        </DCArtboard>
+        <DCArtboard id="progresInk" label="B · Atramentové" width={402} height={874}>
+          <Phone navVariant="progres"><ProgresInk /></Phone>
+        </DCArtboard>
+        <DCArtboard id="progresEditorial" label="C · Editorial" width={402} height={874}>
+          <Phone navVariant="progres"><ProgresEditorial /></Phone>
+        </DCArtboard>
+      </DCSection>
+      <DCSection id="coach" title="Tomáš · AI kouč" subtitle="Chat empty state — hero, intro a navrhované otázky">
+        <DCArtboard id="coachWarm" label="A · Teplá neutrálna" width={402} height={874}>
+          <Phone navVariant="coach"><CoachWarm /></Phone>
+        </DCArtboard>
+        <DCArtboard id="coachInk" label="B · Atramentové" width={402} height={874}>
+          <Phone navVariant="coach"><CoachInk /></Phone>
+        </DCArtboard>
+        <DCArtboard id="coachEditorial" label="C · Editorial" width={402} height={874}>
+          <Phone navVariant="coach"><CoachEditorial /></Phone>
+        </DCArtboard>
+      </DCSection>
+      <DCSection id="search" title="Hľadá jedla" subtitle="Search — bežné potraviny a značkové produkty">
+        <DCArtboard id="searchWarm" label="A · Teplá neutrálna" width={402} height={874}>
+          <Phone nav={false}><SearchWarm /></Phone>
+        </DCArtboard>
+        <DCArtboard id="searchInk" label="B · Atramentové" width={402} height={874}>
+          <Phone nav={false}><SearchInk /></Phone>
+        </DCArtboard>
+        <DCArtboard id="searchEditorial" label="C · Editorial" width={402} height={874}>
+          <Phone nav={false}><SearchEditorial /></Phone>
+        </DCArtboard>
+      </DCSection>
+      <DCSection id="recipes" title="Recepty" subtitle="Zoznam receptov — fotka, čas prípravy a živiny v premium karte">
+        <DCArtboard id="recipesWarm" label="A · Teplá neutrálna" width={402} height={874}>
+          <Phone navVariant="recipes"><RecipesWarm /></Phone>
+        </DCArtboard>
+      </DCSection>
+      <DCSection id="recipeDetail" title="Recept · detail" subtitle="Otvorí sa po kliknutí na recept — fotka, živiny, odporúčanie Tomáša a postup">
+        <DCArtboard id="recipeDetailWarm" label="A · Teplá neutrálna" width={402} height={874}>
+          <Phone nav={false}><RecipeDetailWarm /></Phone>
+        </DCArtboard>
+        <DCArtboard id="recipeDetailSteps" label="A · Postup (scroll)" width={402} height={874}>
+          <Phone nav={false}><RecipeDetailStepsWarm /></Phone>
+        </DCArtboard>
+      </DCSection>
+      <DCSection id="scanResult" title="AI scan · výsledok" subtitle="Po vyfotení jedla — rozpoznané, skóre, kalórie, makrá a tipy od Tomáša">
+        <DCArtboard id="scanResultWarm" label="A · Teplá neutrálna" width={402} height={874}>
+          <Phone nav={false}><ScanResultWarm /></Phone>
+        </DCArtboard>
+      </DCSection>
+      <DCSection id="auth" title="Prihlásenie" subtitle="Variant A — login + registrácia (prepnuté cez tab)">
+        <DCArtboard id="authLogin" label="A · Teplá neutrálna" width={402} height={874}>
+          <Phone nav={false}><AuthLogin /></Phone>
+        </DCArtboard>
+      </DCSection>
+    </DesignCanvas>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById('root')).render(<App />);
+</script>
+</body>
+</html>

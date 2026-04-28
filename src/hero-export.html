@@ -1,0 +1,299 @@
+<!doctype html>
+<html lang="sk">
+<head>
+<meta charset="utf-8" />
+<title>Calora Hero · Export</title>
+<meta name="viewport" content="width=1920" />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Schibsted+Grotesk:wght@400;500;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --cream:#FDF2E4; --cream-deep:#F7E4C8; --ink:#2A1A14; --ink-soft:#5A3F33;
+    --muted:#9A8576; --border:#EED9B8; --border-soft:#F5E5CA;
+    --orange:#E97317; --orange-deep:#C75A08; --orange-soft:#FBD9B4;
+    --sage:#8C9D5E; --sage-soft:#E6E4C4; --plum:#B45E4C; --plum-soft:#F3D8CE;
+    --gold:#C88A2E; --gold-soft:#F5E2B4; --white:#FFFBF4;
+    --green:#4CAF50;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;padding:0;background:#FDF2E4;color:var(--ink);
+    font-family:'Schibsted Grotesk','Plus Jakarta Sans',system-ui,sans-serif;
+    -webkit-font-smoothing:antialiased; text-rendering:optimizeLegibility;}
+  img{max-width:100%;display:block}
+
+  /* ── EXPORT FRAME — FullHD canvas, transparent ─── */
+  .canvas{
+    width:1920px; height:1080px;
+    background:#FDF2E4;
+    position:relative;
+    overflow:visible;
+    display:flex; align-items:center; justify-content:center;
+  }
+
+  /* HERO ARTWORK — copied from Calora Landing */
+  .hero-art, .hero-art *{text-align:left}
+  .hero-art{position:relative; padding:40px 80px}
+  .stage{
+    position:relative;
+    width:1500px;
+    height:1000px;
+    margin:0 auto;
+    transform:scale(1);
+    transform-origin:center center;
+  }
+  .phone{position:absolute;border-radius:62px;background:var(--ink);padding:13px;box-shadow:0 60px 120px -30px rgba(74,45,30,0.42), 0 12px 36px rgba(74,45,30,0.16)}
+  .phone-screen{border-radius:48px;overflow:hidden;background:var(--cream);position:relative}
+  .phone.p-main{width:480px;left:6%;top:50px;transform:rotate(-3deg);z-index:3}
+  .phone.p-main .phone-screen{height:960px}
+  .phone.p-scan{width:480px;right:6%;top:110px;transform:rotate(3deg);z-index:2}
+  .phone.p-scan .phone-screen{height:1020px}
+
+  .ph-statusbar{height:46px;display:flex;align-items:center;justify-content:space-between;padding:0 32px;font-size:18px;font-weight:700;color:var(--ink)}
+  .ph-body{padding:8px 26px 26px;height:calc(100% - 46px);overflow:hidden;display:flex;flex-direction:column;gap:14px}
+  .ph-header{display:flex;align-items:center;justify-content:space-between;padding:6px 4px}
+  .ph-title{font-size:32px;font-weight:700;letter-spacing:-.6px}
+  .avatar-sm{width:46px;height:46px;border-radius:50%;object-fit:cover}
+  .card{background:var(--white);border:1px solid var(--border);border-radius:28px;padding:22px}
+  .ring-card{display:flex;align-items:center;gap:22px}
+  .ring-card .num{font-family:'Schibsted Grotesk',system-ui,sans-serif;font-weight:600;font-size:46px;letter-spacing:-1.4px;line-height:1}
+  .ring-card .sub{font-size:17px;color:var(--muted);font-weight:600;margin-top:6px}
+  .ring-card .of{font-size:16px;color:var(--muted);margin-top:2px}
+  .ring{width:100px;height:100px;border-radius:50%;background:conic-gradient(var(--orange) 0 14deg, var(--orange-soft) 14deg 360deg);display:flex;align-items:center;justify-content:center;margin-left:auto}
+  .ring::before{content:"";width:76px;height:76px;border-radius:50%;background:var(--white)}
+  .macros{display:grid;grid-template-columns:repeat(3,1fr);gap:11px}
+  .macro{background:var(--white);border:1px solid var(--border);border-radius:20px;padding:14px}
+  .macro .lbl{font-size:14.5px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:1.2px}
+  .macro .val{font-size:23px;font-weight:700;margin-top:3px;letter-spacing:-.3px}
+  .macro .bar{height:7px;background:var(--orange-soft);border-radius:999px;margin-top:9px;overflow:hidden}
+  .macro .bar > span{display:block;height:100%;background:var(--orange);border-radius:999px}
+  .macro.sage .bar{background:var(--sage-soft)} .macro.sage .bar > span{background:var(--sage)}
+  .macro.plum .bar{background:var(--plum-soft)} .macro.plum .bar > span{background:var(--plum)}
+  .coach-bubble{background:var(--ink);color:var(--cream);border-radius:28px;padding:20px 22px;display:flex;gap:17px;align-items:flex-start;text-align:left}
+  .coach-bubble > div{flex:1;min-width:0;text-align:left}
+  .coach-bubble img{width:50px;height:50px;border-radius:50%;flex-shrink:0}
+  .coach-bubble .name{font-weight:800;font-size:18.5px;display:flex;align-items:center;gap:8px;text-align:left}
+  .coach-bubble .name::after{content:"";width:9px;height:9px;border-radius:50%;background:var(--green)}
+  .coach-bubble p{margin:6px 0 0;font-size:19px;line-height:1.45;color:rgba(253,242,228,0.9);text-align:left}
+
+  .scan-view{height:100%;background:var(--cream);display:flex;flex-direction:column}
+  .scan-view .sb{height:46px;display:flex;align-items:center;justify-content:space-between;padding:0 26px;font-size:17px;font-weight:700;color:var(--ink)}
+  .scan-view .topbar{padding:6px 22px 14px;display:flex;align-items:center;justify-content:space-between}
+  .scan-view .topbar .back{width:46px;height:46px;border-radius:14px;background:var(--white);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;color:var(--ink)}
+  .scan-view .topbar .ttl{font-size:15.5px;font-weight:800;color:var(--orange-deep);background:var(--orange-soft);padding:9px 14px;border-radius:999px;letter-spacing:1.4px;text-transform:uppercase;display:inline-flex;align-items:center;gap:8px}
+  .scan-view .topbar .ttl::before{content:"";width:8.5px;height:8.5px;border-radius:50%;background:var(--green)}
+  .food-photo{margin:6px 20px 0;border-radius:28px;height:240px;overflow:hidden;position:relative;background:#E8B57A}
+  .food-photo img{width:100%;height:100%;object-fit:cover;display:block}
+  .food-photo .conf{position:absolute;bottom:14px;left:14px;background:rgba(255,255,255,.96);color:var(--ink);font-size:15.5px;font-weight:700;padding:7px 13px;border-radius:999px;display:inline-flex;align-items:center;gap:8px}
+  .food-photo .conf::before{content:"✓";color:var(--orange);font-weight:800}
+  .food-name{padding:20px 26px 8px;display:flex;align-items:flex-start;justify-content:space-between;gap:14px}
+  .food-name .n{font-family:'Schibsted Grotesk',system-ui,sans-serif;font-size:25px;font-weight:700;letter-spacing:-.6px;color:var(--ink);line-height:1.2;text-align:left}
+  .food-name .p{font-size:15.5px;color:var(--muted);font-weight:600;margin-top:4px;text-align:left}
+  .food-name .score{flex-shrink:0;width:80px;height:80px;border-radius:50%;background:conic-gradient(var(--sage) 0 270deg, var(--sage-soft) 270deg 360deg);display:flex;align-items:center;justify-content:center;position:relative}
+  .food-name .score::before{content:"";position:absolute;inset:7px;border-radius:50%;background:var(--cream)}
+  .food-name .score .v{position:relative;font-family:'Schibsted Grotesk',system-ui,sans-serif;font-weight:700;font-size:21px;color:var(--ink);letter-spacing:-.4px;line-height:1}
+  .food-name .score .l{position:relative;font-size:11.5px;color:var(--muted);font-weight:700;text-transform:uppercase;letter-spacing:.8px;margin-top:1px}
+  .scan-cals{margin:0 20px;padding:18px 20px;background:var(--white);border:1px solid var(--border);border-radius:22px;display:flex;align-items:center;justify-content:space-between;text-align:left}
+  .scan-cals > div{text-align:left}
+  .scan-cals .big{font-family:'Schibsted Grotesk',system-ui,sans-serif;font-size:38px;font-weight:700;letter-spacing:-1.4px;color:var(--ink);line-height:1;text-align:left}
+  .scan-cals .lbl{font-size:15.5px;color:var(--muted);font-weight:600;margin-top:4px;text-transform:uppercase;letter-spacing:1px;text-align:left}
+  .scan-cals .pct{font-size:15.5px;font-weight:700;color:var(--orange-deep);background:var(--orange-soft);padding:8px 13px;border-radius:999px}
+  .scan-macros{display:grid;grid-template-columns:repeat(3,1fr);gap:9px;margin:14px 20px 0}
+  .scan-macros .m{background:var(--white);border:1px solid var(--border);border-radius:18px;padding:13px 14px;text-align:left}
+  .scan-macros .m .l{font-size:14px;color:var(--muted);text-transform:uppercase;letter-spacing:1.1px;font-weight:700;text-align:left}
+  .scan-macros .m .v{font-family:'Schibsted Grotesk',system-ui,sans-serif;font-size:22px;font-weight:700;color:var(--ink);letter-spacing:-.4px;margin-top:3px;text-align:left}
+  .scan-macros .m .bar{height:6px;background:var(--orange-soft);border-radius:3px;margin-top:9px;overflow:hidden}
+  .scan-macros .m .bar > span{display:block;height:100%;background:var(--orange);border-radius:3px}
+  .scan-macros .m.sage .bar{background:var(--sage-soft)} .scan-macros .m.sage .bar > span{background:var(--sage)}
+  .scan-macros .m.plum .bar{background:var(--plum-soft)} .scan-macros .m.plum .bar > span{background:var(--plum)}
+  .scan-tips{margin:14px 20px 0;background:var(--ink);border-radius:25px;padding:20px;color:var(--cream);text-align:left}
+  .scan-tips .head{display:flex;align-items:center;gap:11px;margin-bottom:14px;flex-wrap:nowrap}
+  .scan-tips .head img{width:34px;height:34px;border-radius:50%;flex-shrink:0}
+  .scan-tips .head b{font-size:16.5px;font-weight:800;color:#fff;white-space:nowrap}
+  .scan-tips .head span{font-size:13.5px;color:rgba(253,242,228,.55);font-weight:700;text-transform:uppercase;letter-spacing:1.1px;margin-left:auto;white-space:nowrap}
+  .scan-tips ul{list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:8px}
+  .scan-tips ul li{display:flex;gap:11px;font-size:16.5px;line-height:1.45;color:rgba(253,242,228,.92);text-align:left}
+  .scan-tips ul li::before{content:"";flex-shrink:0;width:8.5px;height:8.5px;border-radius:50%;background:var(--orange);margin-top:8px}
+  .scan-tips ul li span{flex:1;min-width:0;text-align:left}
+
+  .recipe-cta-btn{margin-top:8px;background:var(--white);border:1px solid var(--orange-soft);border-radius:20px;padding:14px 17px;display:flex;align-items:center;gap:14px;color:var(--orange-deep);text-align:left;font-weight:700;font-size:17.5px}
+  .recipe-cta-btn .arr{margin-left:auto;color:var(--orange);font-size:25px;font-weight:400;line-height:1}
+  .recipe-cta-btn .ico{width:40px;height:40px;border-radius:11px;background:var(--orange-soft);display:flex;align-items:center;justify-content:center;color:var(--orange-deep);flex-shrink:0}
+
+  /* floating callouts around phones */
+  .float{position:absolute;background:var(--white);border:1px solid var(--border);border-radius:22px;padding:17px 20px;box-shadow:0 22px 50px rgba(74,45,30,0.18);display:flex;align-items:flex-start;text-align:left;gap:14px;z-index:5}
+  .float .ico{width:52px;height:52px;border-radius:14px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+  .float .ico svg{width:26px;height:26px}
+  .float > *{text-align:left}
+  .float .lbl{font-size:15.5px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:1.4px;text-align:left}
+  .float .val{font-size:20.5px;font-weight:700;letter-spacing:-.3px;line-height:1.3;margin-top:3px;text-align:left}
+  .float.sage .ico{background:var(--sage-soft);color:var(--sage)}
+  .float.orange .ico{background:var(--orange-soft);color:var(--orange-deep)}
+  .float.plum .ico{background:var(--plum-soft);color:var(--plum)}
+  .float.gold .ico{background:#FBE7BC;color:#B8821C}
+  .float .spark{display:flex;align-items:flex-end;gap:4px;height:25px;margin-top:8px}
+  .float .spark span{width:7px;background:var(--orange);border-radius:3px;opacity:.85}
+
+  .float-scan   {top:90px;right:42%;max-width:330px;z-index:6}
+  .float-impact {top:790px;left:-10px;max-width:340px}
+  .float-feeling{top:220px;left:42%;max-width:330px;z-index:6}
+  .float-recipe {top:870px;right:-30px;max-width:330px}
+  .float-streak {top:-10px;left:36%;max-width:290px;z-index:6}
+
+</style>
+<template id="__bundler_thumbnail">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><rect width="100" height="100" fill="#FDF2E4"/><circle cx="50" cy="50" r="22" fill="none" stroke="#E97317" stroke-width="6"/><circle cx="72" cy="38" r="4" fill="#E97317"/></svg>
+</template>
+</head>
+<body>
+
+<div class="canvas">
+  <div class="hero-art">
+    <div class="stage">
+
+      <!-- LEFT PHONE: DASHBOARD -->
+      <div class="phone p-main">
+        <div class="phone-screen">
+          <div class="ph-statusbar"><span>9:41</span><span>●●●</span></div>
+          <div class="ph-body">
+            <div class="ph-header">
+              <div>
+                <div style="font-size:16px;color:var(--muted);font-weight:700;letter-spacing:1.4px;text-transform:uppercase">Štvrtok, 23. apríl</div>
+                <div class="ph-title">Ahoj, Zuzana</div>
+              </div>
+              <img class="avatar-sm" src="tomas-avatar.png" alt="">
+            </div>
+            <div class="card ring-card">
+              <div>
+                <div class="num">1 840</div>
+                <div class="sub">Kalórií zostáva</div>
+                <div class="of">620 / 2 460 kcal</div>
+              </div>
+              <div class="ring"></div>
+            </div>
+            <div class="macros">
+              <div class="macro"><div class="lbl">Bielk.</div><div class="val">42g</div><div class="bar"><span style="width:40%"></span></div></div>
+              <div class="macro sage"><div class="lbl">Sacharidy</div><div class="val">68g</div><div class="bar"><span style="width:30%"></span></div></div>
+              <div class="macro plum"><div class="lbl">Tuky</div><div class="val">18g</div><div class="bar"><span style="width:25%"></span></div></div>
+            </div>
+            <div class="coach-bubble">
+              <img src="tomas-avatar.png" alt="">
+              <div>
+                <div class="name">Tomáš</div>
+                <p>Viem, že máš dnes len <b style="color:#fff">20 minút</b> na varenie. Mám pre teba rýchly recept — <b style="color:#fff">38 g bielkovín za 5 minút</b>.</p>
+                <div class="recipe-cta-btn" style="margin-top:14px;background:rgba(253,242,228,0.08);border-color:rgba(233,115,23,0.5);color:#FBD9B4">
+                  <div class="ico" style="background:var(--orange);color:#fff"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v4M5 8h14l-1 12H6L5 8z"/></svg></div>
+                  <span>Pozri recept krok za krokom</span>
+                  <span class="arr" style="color:var(--orange-soft)">→</span>
+                </div>
+              </div>
+            </div>
+            <div class="card" style="padding:16px 20px;display:flex;align-items:center;gap:14px;background:var(--orange);color:#fff;border-color:var(--orange);box-shadow:0 14px 30px rgba(233,115,23,0.36)">
+              <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="7" width="18" height="13" rx="2.5"/><path d="M8 7l1.5-2.5h5L16 7"/><circle cx="12" cy="13.5" r="3.5"/></svg>
+              <div style="font-weight:700;font-size:21px">Odfotiť ďalšie jedlo</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- RIGHT PHONE: SCAN RESULT -->
+      <div class="phone p-scan">
+        <div class="phone-screen">
+          <div class="scan-view">
+            <div class="sb"><span>9:41</span><span>●●●</span></div>
+            <div class="topbar">
+              <div class="back">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>
+              </div>
+              <div class="ttl">Rozpoznané</div>
+              <div style="width:46px"></div>
+            </div>
+            <div class="food-photo">
+              <img src="food-chicken-rice.png" alt="Kuracie s ryžou">
+              <div class="conf">98 % istota</div>
+            </div>
+            <div class="food-name">
+              <div>
+                <div class="n">Kuracie prsia s ryžou</div>
+                <div class="p">400 g · obed</div>
+              </div>
+              <div class="score">
+                <div style="position:relative;text-align:center"><div class="v">A</div><div class="l">Skóre</div></div>
+              </div>
+            </div>
+            <div class="scan-cals">
+              <div>
+                <div class="big">612 kcal</div>
+                <div class="lbl">25 % denného cieľa</div>
+              </div>
+              <div class="pct">+38 g BIELK.</div>
+            </div>
+            <div class="scan-macros">
+              <div class="m"><div class="l">Bielk.</div><div class="v">38 g</div><div class="bar"><span style="width:78%"></span></div></div>
+              <div class="m sage"><div class="l">Sach.</div><div class="v">82 g</div><div class="bar"><span style="width:60%"></span></div></div>
+              <div class="m plum"><div class="l">Tuky</div><div class="v">8 g</div><div class="bar"><span style="width:22%"></span></div></div>
+            </div>
+            <div class="scan-tips">
+              <div class="head">
+                <img src="tomas-avatar.png" alt="">
+                <b>Tomáš · pre teba</b>
+                <span>3 tipy</span>
+              </div>
+              <ul>
+                <li><span>Zasýti ťa na <b style="color:#fff">3 hodiny</b> — energia bude stabilná</span></li>
+                <li><span>Pomôže utlmiť tvoje <b style="color:#fff">popoludňajšie chute na sladké</b></span></li>
+                <li><span>Po obede skús 10-min prechádzku — zlepšíš trávenie</span></li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- FLOATING CALLOUTS -->
+      <div class="float float-scan sage">
+        <div class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M20 6L9 17l-5-5"/></svg></div>
+        <div>
+          <div class="lbl">Rozpoznané za 1.2 s</div>
+          <div class="val">jedna fotka → kompletná analýza</div>
+        </div>
+      </div>
+
+      <div class="float float-impact orange">
+        <div class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2L3 14h7l-1 8 10-12h-7l1-8z"/></svg></div>
+        <div>
+          <div class="lbl">Energia po jedle</div>
+          <div class="val">Stabilná na 3 hodiny</div>
+          <div class="spark"><span style="height:35%"></span><span style="height:55%"></span><span style="height:70%"></span><span style="height:85%"></span><span style="height:78%"></span><span style="height:65%"></span><span style="height:52%"></span></div>
+        </div>
+      </div>
+
+      <div class="float float-feeling plum">
+        <div class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M9 9h.01M15 9h.01M9 15c1 1 5 1 6 0"/></svg></div>
+        <div>
+          <div class="lbl">Cítiš hlad aj keď si jedla?</div>
+          <div class="val">„Skús pohár vody + 10 min."</div>
+        </div>
+      </div>
+
+      <div class="float float-recipe gold">
+        <div class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v4M5 8h14l-1 12H6L5 8z"/></svg></div>
+        <div>
+          <div class="lbl">Recept krok za krokom</div>
+          <div class="val">prispôsobený tvojmu času</div>
+        </div>
+      </div>
+
+      <div class="float float-streak orange">
+        <div class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2s4 4 4 8a4 4 0 1 1-8 0c0-2 1-3 1-3s-1 6 3 6"/></svg></div>
+        <div>
+          <div class="lbl">12 dní v rade</div>
+          <div class="val">Tento týždeň: −0.8 kg</div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+</body>
+</html>
